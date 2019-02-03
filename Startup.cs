@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using EFCoreNewDatabase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
 
 namespace EFCoreNewDatabase
 {
@@ -27,6 +28,8 @@ namespace EFCoreNewDatabase
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:BlogIdentity:ConnectionString"]));
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
             // this is where we use the config info for our connection string
             services.AddDbContext<BloggingContext>(options => options.UseSqlServer(Configuration["Data:Blog:ConnectionString"]));
             // since we created an interface for our repository, we must map the 
@@ -44,6 +47,8 @@ namespace EFCoreNewDatabase
                 app.UseDeveloperExceptionPage();
             }
 
+            // Make the authentication service available to the application (Order matters here)
+            app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
             // TODO: remove after database has been seeded
             // DO NOT deploy to production without removing this line
