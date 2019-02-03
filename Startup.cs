@@ -29,7 +29,15 @@ namespace EFCoreNewDatabase
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:BlogIdentity:ConnectionString"]));
-            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<AppUser, IdentityRole>(opts =>
+            {
+                opts.Password.RequiredLength = 6;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireDigit = false;
+                opts.Password.RequiredUniqueChars = 1;
+            }).AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
             // this is where we use the config info for our connection string
             services.AddDbContext<BloggingContext>(options => options.UseSqlServer(Configuration["Data:Blog:ConnectionString"]));
             // since we created an interface for our repository, we must map the 
