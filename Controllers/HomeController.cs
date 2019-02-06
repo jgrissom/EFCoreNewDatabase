@@ -22,6 +22,7 @@ namespace EFCoreNewDatabase.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult AddBlog(Blog model)
         {
             if (ModelState.IsValid)
