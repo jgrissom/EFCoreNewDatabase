@@ -2,11 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using EFCoreNewDatabase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFCoreNewDatabase.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoleAdminController : Controller
     {
         private RoleManager<IdentityRole> roleManager;

@@ -29,6 +29,9 @@ namespace EFCoreNewDatabase.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public ViewResult AccessDenied() => View();
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -46,9 +49,15 @@ namespace EFCoreNewDatabase.Controllers
                         return Redirect(returnUrl ?? "/");
                     }
                 }
-                ModelState.AddModelError(nameof(LoginModel.Email), "Invalid user of password");
+                ModelState.AddModelError(nameof(LoginModel.Email), "Invalid user or password");
             }
             return View(details);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
