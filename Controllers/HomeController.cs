@@ -17,12 +17,12 @@ namespace EFCoreNewDatabase.Controllers
         public HomeController(IBloggingRepository repo) => repository = repo;
 
         public IActionResult Index() => View(repository.Blogs.OrderBy(b => b.Url));
-        [Authorize]
+        [Authorize(Roles = "Moderate")]
         public IActionResult AddBlog() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Moderate")]
         public IActionResult AddBlog(Blog model)
         {
             if (ModelState.IsValid)
@@ -39,7 +39,7 @@ namespace EFCoreNewDatabase.Controllers
             }
             return View();
         }
-
+        [Authorize(Roles = "Moderate")]
         public IActionResult DeleteBlog(int id)
         {
             repository.DeleteBlog(repository.Blogs.FirstOrDefault(b => b.BlogId == id));

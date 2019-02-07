@@ -9,5 +9,12 @@
         <div>
             @RenderBody()
         </div>
+        <hr />
+        @if (User?.Identity?.IsAuthenticated ?? false)
+        {
+            <a asp-controller="Account" asp-action="Logout">Logout</a>
+        } else {
+            <a asp-controller="Account" asp-action="Login">Login</a>
+        }
     </body>
 </html>

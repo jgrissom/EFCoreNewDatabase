@@ -1,22 +1,35 @@
 ﻿@using EFCoreNewDatabase.Models
 @model IEnumerable<Blog>
 
-@if(Model.Count() == 0)
+@if (Model.Count() == 0)
 {
     <p>There are no blogs</p>
 }
-else 
+else
 {
     <ul>
         @foreach (Blog blog in Model)
         {
             <li>
-                <a asp-action="BlogDetail" asp-route-id="@blog.BlogId">@blog.Url</a> |
-                <a asp-action="DeleteBlog" asp-route-id="@blog.BlogId">Delete</a>
+                <a asp-action="BlogDetail" asp-route-id="@blog.BlogId">@blog.Url</a>
+                @if (User?.Identity?.IsAuthenticated ?? true)
+                {
+                    if (User.IsInRole("Moderate"))
+                    {
+                        <span> | </span><a asp-action="DeleteBlog" asp-route-id="@blog.BlogId">Delete</a>
+                    }
+                }
             </li>
         }
     </ul>
 }
 
-<hr />
-<a asp-action="AddBlog">New Blog</a>
+@if (User?.Identity?.IsAuthenticated ?? true)
+{
+    if (User.IsInRole("Moderate"))
+    {
+        <hr />
+        <a asp-action="AddBlog">New Blog</a>
+    }
+}
+
